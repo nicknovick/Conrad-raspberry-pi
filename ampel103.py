@@ -18,7 +18,7 @@ print("Taster drücken, um Fußgängerblinklicht einzuschalten. Strg+C beendet d
 
 try:
     while True:
-        if GPIO.input(Ampel[taster]==True):
+        if GPIO.input(Ampel[taster] == True):
             GPIO.output(Ampel[gruen],False)
             GPIO.output(Ampel[gelb],True)
             time.sleep(0.6)
@@ -37,5 +37,5 @@ try:
             GPIO.output(Ampel[rot],False)
             GPIO.output(Ampel[gruen],True)
             time.sleep(2)
-except KeyboardInterrupt:
+except:
     GPIO.cleanup()

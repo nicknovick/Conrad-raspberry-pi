@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "c:\\Users\\mykola.novik\\Documents\\tools\\VSCode\\python\\python.exe"
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }

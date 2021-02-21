@@ -31,5 +31,5 @@ try:
         GPIO.output(Ampel[gelb],False)
         GPIO.output(Ampel[rot],False)
         GPIO.output(Ampel[gruen],True)
-except KeyboardInterrupt:
+except:
     GPIO.cleanup()
