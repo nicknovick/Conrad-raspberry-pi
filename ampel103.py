@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 import RPi.GPIO as GPIO
 import time
+import sys
+
 GPIO.setmode(GPIO.BCM)
 rot = 0
 gelb = 1
 gruen = 2
 blau = 3
 taster = 4
-Ampel=[22,27,17,10,9]
+Ampel=[22,27,17,10,9] #BCM
+#Ampel=[15,13,11,19,21] #Board
 GPIO.setup(Ampel[rot], GPIO.OUT, initial=False)
 GPIO.setup(Ampel[gelb], GPIO.OUT, initial=False)
 GPIO.setup(Ampel[gruen], GPIO.OUT, initial=True)
@@ -18,7 +21,7 @@ print("Taster drücken, um Fußgängerblinklicht einzuschalten. Strg+C beendet d
 
 try:
     while True:
-        if GPIO.input(Ampel[taster] == True):
+        if GPIO.input(Ampel[taster]) == True:
             GPIO.output(Ampel[gruen],False)
             GPIO.output(Ampel[gelb],True)
             time.sleep(0.6)
@@ -38,4 +41,7 @@ try:
             GPIO.output(Ampel[gruen],True)
             time.sleep(2)
 except:
+    exc = sys.exc_info()
+    for i in exc:
+        print(i)
     GPIO.cleanup()
