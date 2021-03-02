@@ -5,7 +5,7 @@ import random
 
 GPIO.setmode(GPIO.BCM)
 
-LED=[22,27,17,10]
+LED=[10,22,27,17]
 
 for i in LED:
     GPIO.setup(i, GPIO.OUT, initial=0)
