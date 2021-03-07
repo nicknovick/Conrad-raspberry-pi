@@ -1,2 +1,2 @@
 # RPi
-Code snippets based on "Conrad Raspberry Pi - verstehen und anwenden" booklet
+Code snippets for Raspberry Pi based on "Conrad Raspberry Pi - verstehen und anwenden" booklet
