@@ -8,11 +8,11 @@ farbe = []
 for i in range(rzahl):
     farbe.append(random.randrange(4))
 
-LED = []  #TODO
+LED = [17, 22, 9, 5]
 for i in LED:
     GPIO.setup(i, GPIO.OUT, initial=False)
 
-TAST = []  #TODO
+TAST = [27, 10, 11, 6]
 for i in TAST:
     GPIO.setup(i, GPIO.IN)
 
