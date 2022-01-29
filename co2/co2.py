@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+# -*- coding: utf-8 -*-
 """
 Blah
 """
@@ -7,6 +9,12 @@ import json
 import mh_z19
 import RPi.GPIO as GPIO
 import os
+from pathlib import Path
+from luma.core.interface.serial import i2c
+from luma.core.render import canvas
+from luma.oled.device import sh1106, ssd1306
+from PIL import ImageFont, ImageDraw, Image, ImageOps
+
 
 GPIO.setmode(GPIO.BCM)
 RED = 18
@@ -18,6 +26,16 @@ CO2_LOW = 430
 GPIO.setup(RED, GPIO.OUT, initial=False)
 GPIO.setup(YELLOW, GPIO.OUT, initial=False)
 GPIO.setup(GREEN, GPIO.OUT, initial=False)
+SERIAL = i2c(port=1, address=0x3C)
+DEVICE = sh1106(SERIAL)
+FONT = ImageFont.truetype('coolvetica rg.otf', 26)
+IMG_PATH = str(Path(__file__).resolve().parent.joinpath('ventilator_64x64.png'))
+LOGO = Image.open(IMG_PATH).convert("RGBA")
+FFF = Image.new(LOGO.mode, LOGO.size, (255,) * 4)
+BACKGROUND = Image.new("RGBA", DEVICE.size, "white")
+POSN = ((DEVICE.width - LOGO.width) // 2, 0)
+IMG = Image.composite(LOGO, FFF, LOGO)
+BACKGROUND.paste(IMG, POSN)
 
 subprocess.run("echo none > /sys/class/leds/led0/trigger", shell=True)
 subprocess.run("echo none > /sys/class/leds/led1/trigger", shell=True)
@@ -43,6 +61,8 @@ def set_red():
     GPIO.output(GREEN, False)
     GPIO.output(YELLOW, False)
     GPIO.output(RED, True)
+    time.sleep(2)
+    DEVICE.display(BACKGROUND.convert(DEVICE.mode))
 
 def set_none():
     subprocess.run("sudo sh -c 'echo 0 > /sys/class/leds/led0/brightness'", shell=True) #green off
@@ -56,6 +76,13 @@ try:
         X = mh_z19.read()
         VALUE = X["co2"]
         print(VALUE)
+        with canvas(DEVICE) as draw:
+            draw.text((0, 0), "CO₂", font=FONT, fill="white")
+            draw.text((70, 0), str(VALUE), font=FONT, fill="white")
+            #draw.text((0, 30), "Tmp", font=FONT, fill="white")
+            #draw.text((70, 30), "99", font=FONT, fill="white")
+            #draw.text((100, 30), "°C", font=FONT, fill="white")
+
         if VALUE > CO2_CRITICAL:
             set_red()
         elif VALUE > CO2_WARNING:
